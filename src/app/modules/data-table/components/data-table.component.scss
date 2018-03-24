@@ -27,6 +27,8 @@
   //min-height: 81vh;
   .mat-header-row,
   .mat-row {
+    cursor: pointer;
+
     .mat-header-cell:first-child,
     .mat-cell:first-child {
       // flex: 0;

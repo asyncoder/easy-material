@@ -22,7 +22,7 @@
 ></nui-data-form> -->
 
 
-<nui-data-table [meta]="meta$ | async" [data]="data$ | async" (add)="onAdd($event)"></nui-data-table>
+<nui-data-table [meta]="meta$ | async" [data]="data$ | async" (add)="onAdd($event)" (select)="onSelect($event)"></nui-data-table>
 
 
 <!-- 

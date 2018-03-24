@@ -60,6 +60,7 @@ export class DataTableComponent implements OnInit, AfterViewInit {
   //@Input() selectedFilterId: string;
 
   @Output() add: EventEmitter<any> = new EventEmitter<any>();
+  @Output() select: EventEmitter<any[]> = new EventEmitter<any[]>();
 
   private readonly ORDER_NO: string = "OrderNo";
   private readonly KEY_ACTION: string = "keyup";
@@ -112,6 +113,7 @@ export class DataTableComponent implements OnInit, AfterViewInit {
     } else {
       this.selectedRows = this.selectedRows.filter(dr => dr !== dataRow);
     }
+    this.select.emit(this.selectedRows);
   }
 
   onSelectAllPageRows(isChecked: boolean): void {

@@ -31,4 +31,8 @@ export class AppComponent {
   onAdd(event) {
     console.log(event);
   }
+
+  onSelect(event) {
+    console.log(event);
+  }
 }
