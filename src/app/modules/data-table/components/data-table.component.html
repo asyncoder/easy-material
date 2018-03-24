@@ -1,0 +1,103 @@
+<div class="mat-elevation-z2">
+  <div class="filter-header">
+    #Filter title here - TODO
+  </div>
+
+  <div class="toolbar">
+
+    <!-- Quick Search -->
+    <!-- <div class="search"> -->
+    <!-- <mat-form-field floatPlaceholder="never">
+        <mat-select #searchBy [(value)]="selectedSearchByFieldId" placeholder="Quick search">
+          <mat-option *ngFor="let field of searchableFields" [value]="field.id">
+            {{ field.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field floatPlaceholder="never">
+        <mat-select #operator [(value)]="selectedLogicalOperatorId" placeholder="Operator">
+          <mat-option *ngFor="let logicalOperator of logicalOperators" [value]="logicalOperator.id">
+            {{ logicalOperator.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field> -->
+
+    <mat-form-field floatPlaceholder="auto" class="quick-search-value">
+      <mat-placeholder>
+        <mat-icon>search</mat-icon>
+        Filter
+      </mat-placeholder>
+      <input matInput #searchInput>
+    </mat-form-field>
+    <!-- </div> -->
+
+    <div>
+      <!-- Add -->
+      <button mat-icon-button matTooltip="Add" matTooltipPosition="below" (click)="onAdd()">
+        <mat-icon aria-label="Add">add</mat-icon>
+      </button>
+
+      <!-- Remove -->
+      <button mat-icon-button matTooltip="Delete" matTooltipPosition="below" [disabled]="selectedRows.length == 0">
+        <mat-icon aria-label="Delete">delete</mat-icon>
+      </button>
+
+      <!-- Refresh -->
+      <button mat-icon-button matTooltip="Refresh" matTooltipPosition="below">
+        <mat-icon aria-label="Refresh">refresh</mat-icon>
+      </button>
+
+      <!-- Manage Filters -->
+      <button mat-icon-button matTooltip="Filters" matTooltipPosition="below">
+        <mat-icon aria-label="Manage filters">filter_list</mat-icon>
+      </button>
+
+      <!-- Actions -->
+      <button mat-icon-button [matMenuTriggerFor]="menuAction" matTooltip="Actions" matTooltipPosition="below">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu x-position="before" #menuAction="matMenu">
+        <button mat-menu-item (click)="onSelectAllPageRows(true)">Select All</button>
+        <button mat-menu-item (click)="onDeselectAllPageRows()">Deselect All</button>
+        <button mat-menu-item>Reload</button>
+      </mat-menu>
+    </div>
+  </div>
+
+  <mat-table #table [dataSource]="dataSource" matSort>
+    <ng-container matColumnDef="-select-">
+      <mat-header-cell *matHeaderCellDef>
+        <mat-checkbox color="primary" (change)="onSelectAllPageRows($event.checked)">
+        </mat-checkbox>
+      </mat-header-cell>
+
+      <mat-cell *matCellDef="let row">
+        <mat-checkbox color="primary" [checked]="isRowSelected(row)" [value]="row.key" (change)="onSelectRow(row, $event.checked)">
+        </mat-checkbox>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container *ngFor="let dr of displayedFields" [matColumnDef]="dr.id">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ dr.label }}</mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        {{ row[dr.id] }}
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;" [class.selected-row]="isRowSelected(row)"></mat-row>
+  </mat-table>
+
+  <div class="pagination-container">
+    <div class="pagination-info">
+      <span *ngIf="selectedRows.length > 0">
+        <strong>{{ selectedRows.length }} </strong> selected
+      </span>
+    </div>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+
+    <!--  [length]="data.length" [pageIndex]="0" [pageSize]="5" -->
+  </div>
+</div>
