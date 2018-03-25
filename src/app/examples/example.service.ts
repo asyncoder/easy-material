@@ -5,7 +5,7 @@ import { Observable } from "rxjs/Observable";
 const url: string = "http://localhost:4200/assets/";
 
 @Injectable()
-export class AppService {
+export class ExampleService {
   constructor(private httpClient: HttpClient) {}
 
   getMeta(): Observable<any> {
