@@ -120,7 +120,8 @@ export class DataTableComponent implements OnChanges {
     });
   }
 
-  onSelectRow(dataRow: any, isChecked: boolean) {
+  onSelectRow(dataRow: any, isChecked: boolean, isOnce: boolean = false) {
+    if (isOnce) this.selectedRows = [];
     if (isChecked) {
       this.selectedRows = [...this.selectedRows, dataRow];
     } else {
