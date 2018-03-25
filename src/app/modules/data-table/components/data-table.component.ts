@@ -10,23 +10,19 @@ import {
   Input,
   ViewChild,
   EventEmitter,
-  OnInit,
-  AfterViewInit,
-  Output
+  Output,
+  ChangeDetectionStrategy,
+  OnChanges
 } from "@angular/core";
 
 import { DataSource } from "@angular/cdk/collections";
 import { MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
 
 import { Observable } from "rxjs/Observable";
-//import { of } from "rxjs/observable/of";
-//import { merge } from "rxjs/observable/merge";
 import { fromEvent } from "rxjs/observable/fromEvent";
 import { map } from "rxjs/operator/map";
-//import { debounceTime } from "rxjs/operator/debounceTime";
-//import { distinctUntilChanged } from "rxjs/operator/distinctUntilChanged";
 
-import { Meta, Field, LOV, Filter, LogicalOperator } from "../../core/models";
+import { Meta, Field, LOV, LogicalOperator } from "../../core/models";
 import { ActionService, CommonService } from "../../core/services";
 import { LogicalOperatorEnum as loEnum } from "../../core/enums";
 
@@ -38,9 +34,10 @@ import { LogicalOperatorEnum as loEnum } from "../../core/enums";
 @Component({
   selector: "nui-data-table",
   templateUrl: "./data-table.component.html",
-  styleUrls: ["./data-table.component.scss"]
+  styleUrls: ["./data-table.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DataTableComponent implements OnInit, AfterViewInit {
+export class DataTableComponent implements OnChanges {
   searchableFields: Field[];
   displayedFields: Field[];
   displayedColumns: string[];
@@ -54,13 +51,13 @@ export class DataTableComponent implements OnInit, AfterViewInit {
 
   @Input() meta: Meta[] = [];
   @Input() data: any[] = [];
-  //@Input() filters: Filter[] = [];
-  //@Input() selectedSearchByFieldId: string;
-  //@Input() selectedLogicalOperatorId: string;
-  //@Input() selectedFilterId: string;
 
   @Output() add: EventEmitter<any> = new EventEmitter<any>();
+  @Output() delete: EventEmitter<any[]> = new EventEmitter<any[]>();
+  @Output() refresh: EventEmitter<any> = new EventEmitter<any>();
   @Output() select: EventEmitter<any[]> = new EventEmitter<any[]>();
+  @Output() selectAll: EventEmitter<any[]> = new EventEmitter<any[]>();
+  @Output() deselectAll: EventEmitter<any[]> = new EventEmitter<any[]>();
 
   private readonly ORDER_NO: string = "OrderNo";
   private readonly KEY_ACTION: string = "keyup";
@@ -70,34 +67,38 @@ export class DataTableComponent implements OnInit, AfterViewInit {
     private commonService: CommonService
   ) {}
 
-  ngOnInit() {
-    // this.logicalOperators = this.commonService.LogicalOperators;
-
-    // this.searchableFields = this.meta
-    //   .filter(m => m.isSearchable)
-    //   .map(m => m.field);
-
+  ngOnChanges() {
     // Metafields
-    this.displayedFields = this.actionService
-      .sort(this.meta.filter(m => m.isVisible), this.ORDER_NO, true)
-      .map(m => m.field);
+    if (this.meta) {
+      this.displayedFields = this.actionService
+        .sort(this.meta.filter(m => m.isVisible), this.ORDER_NO, true)
+        .map(m => m.field);
 
-    this.displayedColumns = this.displayedFields.map(f => f.id);
-    this.displayedColumns = ["-select-", ...this.displayedColumns];
+      this.displayedColumns = this.displayedFields.map(f => f.id);
+      this.displayedColumns = ["-select-", ...this.displayedColumns];
+    }
 
     // Data
-    this.dataSource = new MatTableDataSource(this.data);
+    if (this.data) {
+      this.dataSource = new MatTableDataSource(this.data);
 
-    this.onSearch();
-  }
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+      this.onSearch();
+    }
   }
 
   onAdd() {
     this.add.emit({});
+  }
+
+  onDelete() {
+    this.add.emit(this.selectedRows);
+  }
+
+  onRefresh() {
+    this.refresh.emit({});
   }
 
   onSearch() {
@@ -116,16 +117,18 @@ export class DataTableComponent implements OnInit, AfterViewInit {
     this.select.emit(this.selectedRows);
   }
 
-  onSelectAllPageRows(isChecked: boolean): void {
+  onSelectAllRows(isChecked: boolean): void {
     if (isChecked) {
       this.selectedRows = this.dataSource.filteredData;
     } else {
-      this.onDeselectAllPageRows();
+      this.onDeselectAllRows();
     }
+    this.selectAll.emit(this.selectedRows);
   }
 
-  onDeselectAllPageRows(): void {
+  onDeselectAllRows(): void {
     this.selectedRows = [];
+    this.deselectAll.emit(this.selectedRows);
   }
 
   isRowSelected(dataRow: any): boolean {

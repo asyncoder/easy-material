@@ -9,6 +9,7 @@ import { of } from "rxjs/observable/of";
 // import { DialogButtonsEnum } from "./modules/core/enums";
 
 import { meta, data, filters } from "./mock-data";
+import { AppService } from "./app.service";
 
 @Component({
   selector: "app-root",
@@ -18,21 +19,38 @@ import { meta, data, filters } from "./mock-data";
 export class AppComponent {
   meta$: Observable<any>;
   data$: Observable<any>;
-  filters$: Observable<any>;
 
-  constructor() {}
+  meta: any;
+
+  constructor(private appService: AppService) {}
 
   ngOnInit() {
-    this.meta$ = of(meta);
-    this.data$ = of(data);
-    this.filters$ = of(filters);
+    this.meta$ = this.appService.getMeta(); //of(meta);
+    this.data$ = this.appService.getData(); //of(data);
   }
 
   onAdd(event) {
     console.log(event);
   }
 
+  onDelete(event) {
+    console.log(event);
+  }
+
+  onRefresh(event) {
+    this.meta$ = this.appService.getMeta();
+    this.data$ = this.appService.getData();
+  }
+
   onSelect(event) {
+    console.log(event);
+  }
+
+  onSelectAll(event) {
+    console.log(event);
+  }
+
+  onDeselectAll(event) {
     console.log(event);
   }
 }

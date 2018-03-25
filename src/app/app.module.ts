@@ -13,6 +13,7 @@ import { DataTableModule } from "./modules/data-table";
 // import { ExampleDataTableComponent } from "./examples/data-table/example-data-table.component";
 
 import { AppComponent } from "./app.component";
+import { AppService } from "./app.service";
 
 @NgModule({
   declarations: [
@@ -33,9 +34,7 @@ import { AppComponent } from "./app.component";
     // DialogBoxModule,
     // DataFormModule
   ],
-  providers: [
-    // DataService
-  ],
+  providers: [AppService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

@@ -1,33 +1,3 @@
-<!-- <nui-data-table
-    [panel]="panel$ | async"
-    [sectionKey]="1"    
-    [data]="data$ | async"
-    defaultSearchedFieldId="name"
-    defaultLogicalOperatorId="equal"
-    defaultSortFieldId="key"
-    [defaultSortAsc]="true"
-    [defaultPageSize]="10"
-    [pageSizes]="[5, 10, 20, 50, 100]"
-    (add)="onAdd()"
-    (remove)="onRemove($event)"
-    (edit)="onEdit($event)"
-    (refresh)="onRefresh()"
-    (reload)="onReload()"
-></nui-data-table> -->
-
-<!-- <nui-data-form
-    [panel]="panel$ | async"
-    [sectionKey]="3"
-    [data]="data$ | async"
-></nui-data-form> -->
-
-
-<nui-data-table [meta]="meta$ | async" [data]="data$ | async" (add)="onAdd($event)" (select)="onSelect($event)"></nui-data-table>
-
-
-<!-- 
-<nui-data-table
-    [panel]="panel$ | async"
-    [data]="data$ | async"
-    selectedSearchByFieldId="id"
-></nui-data-table> -->
+<nui-data-table [meta]="meta$ | async" [data]="data$ | async" (add)="onAdd($event)" (delete)="onDelete($event)" (refresh)="onRefresh($event)"
+    (select)="onSelect($event)" (selectAll)="onSelectAll($event)" (deselectAll)="onDeselectAll($event)">
+</nui-data-table>

@@ -26,7 +26,7 @@
     <mat-form-field floatPlaceholder="auto" class="quick-search-value">
       <mat-placeholder>
         <mat-icon>search</mat-icon>
-        Filter
+        Quick search
       </mat-placeholder>
       <input matInput #searchInput>
     </mat-form-field>
@@ -39,12 +39,12 @@
       </button>
 
       <!-- Remove -->
-      <button mat-icon-button matTooltip="Delete" matTooltipPosition="below" [disabled]="selectedRows.length == 0">
+      <button mat-icon-button matTooltip="Delete" matTooltipPosition="below" [disabled]="selectedRows.length == 0" (click)="onDelete()">
         <mat-icon aria-label="Delete">delete</mat-icon>
       </button>
 
       <!-- Refresh -->
-      <button mat-icon-button matTooltip="Refresh" matTooltipPosition="below">
+      <button mat-icon-button matTooltip="Refresh" matTooltipPosition="below" (click)="onRefresh()">
         <mat-icon aria-label="Refresh">refresh</mat-icon>
       </button>
 
@@ -58,8 +58,8 @@
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu x-position="before" #menuAction="matMenu">
-        <button mat-menu-item (click)="onSelectAllPageRows(true)">Select All</button>
-        <button mat-menu-item (click)="onDeselectAllPageRows()">Deselect All</button>
+        <button mat-menu-item (click)="onSelectAllRows(true)">Select All</button>
+        <button mat-menu-item (click)="onDeselectAllRows()">Deselect All</button>
         <button mat-menu-item>Reload</button>
       </mat-menu>
     </div>
@@ -68,7 +68,7 @@
   <mat-table #table [dataSource]="dataSource" matSort>
     <ng-container matColumnDef="-select-">
       <mat-header-cell *matHeaderCellDef>
-        <mat-checkbox color="primary" (change)="onSelectAllPageRows($event.checked)">
+        <mat-checkbox color="primary" (change)="onSelectAllRows($event.checked)">
         </mat-checkbox>
       </mat-header-cell>
 
@@ -80,13 +80,13 @@
 
     <ng-container *ngFor="let dr of displayedFields" [matColumnDef]="dr.id">
       <mat-header-cell *matHeaderCellDef mat-sort-header>{{ dr.label }}</mat-header-cell>
-      <mat-cell *matCellDef="let row">
+      <mat-cell *matCellDef="let row" (click)="onSelectRow(row, !isRowSelected(row))">
         {{ row[dr.id] }}
       </mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;" [class.selected-row]="isRowSelected(row)" (click)="onSelectRow(row, !isRowSelected(row))"></mat-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;" [class.selected-row]="isRowSelected(row)"></mat-row>
   </mat-table>
 
   <div class="pagination-container">

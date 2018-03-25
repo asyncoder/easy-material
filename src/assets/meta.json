@@ -1,0 +1,77 @@
+[
+  {
+    "key": 1,
+    "orderNo": 1,
+    "isVisible": true,
+    "isRequired": true,
+    "isSearchable": false,
+    "field": {
+      "key": 1,
+      "id": "key",
+      "label": "Key",
+      "type": "number",
+      "options": []
+    }
+  },
+  {
+    "key": 2,
+    "orderNo": 2,
+    "isVisible": true,
+    "isRequired": true,
+    "isSearchable": true,
+    "field": {
+      "key": 2,
+      "id": "id",
+      "label": "Cutomer ID",
+      "type": "text",
+      "options": []
+    }
+  },
+  {
+    "key": 3,
+    "orderNo": 3,
+    "isVisible": true,
+    "isRequired": true,
+    "isSearchable": true,
+    "field": {
+      "key": 3,
+      "id": "name",
+      "label": "Name",
+      "type": "text",
+      "options": []
+    }
+  },
+  {
+    "key": 4,
+    "orderNo": 4,
+    "isVisible": true,
+    "isRequired": true,
+    "isSearchable": true,
+    "field": {
+      "key": 4,
+      "id": "city",
+      "label": "City",
+      "type": "select",
+      "options": [
+        {
+          "key": 1,
+          "value": "TNG",
+          "label": "Tangier",
+          "fieldKey": 4
+        },
+        {
+          "key": 2,
+          "value": "VN",
+          "label": "Villeneuve",
+          "fieldKey": 4
+        },
+        {
+          "key": 3,
+          "value": "CAS",
+          "label": "Caslano",
+          "fieldKey": 4
+        }
+      ]
+    }
+  }
+]
