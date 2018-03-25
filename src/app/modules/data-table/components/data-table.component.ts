@@ -22,7 +22,7 @@ import { Observable } from "rxjs/Observable";
 import { fromEvent } from "rxjs/observable/fromEvent";
 import { map } from "rxjs/operator/map";
 
-import { Meta, Field, LOV, LogicalOperator } from "../../core/models";
+import { Meta, Field, LOV, LogicalOperator, Option } from "../../core/models";
 import { ActionService, CommonService } from "../../core/services";
 import { LogicalOperatorEnum as loEnum } from "../../core/enums";
 
@@ -87,6 +87,18 @@ export class DataTableComponent implements OnChanges {
 
       this.onSearch();
     }
+  }
+
+  getLabel(fieldId: string, value: string): string {
+    const meta: Meta = this.meta.find(
+      m => m.field.type === "select" && m.field.id === fieldId
+    );
+    if (!meta) return value;
+
+    const option: Option = meta.field.options.find(o => o.value === value);
+    if (!option) return;
+
+    return option.label;
   }
 
   onAdd() {
