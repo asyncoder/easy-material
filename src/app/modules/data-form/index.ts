@@ -7,7 +7,7 @@ import {
   MatSelectModule,
   MatButtonModule
 } from "@angular/material";
-import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ReactiveFormsModule } from "@angular/forms";
 
 import { DataFormComponent } from "./components/data-form.component";
@@ -22,7 +22,7 @@ import { SortPipe } from "../core/pipes";
     MatDatepickerModule,
     MatSelectModule,
     MatButtonModule,
-    NoopAnimationsModule,
+    BrowserAnimationsModule,
     ReactiveFormsModule
   ],
   entryComponents: [DataFormComponent],
