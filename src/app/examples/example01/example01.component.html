@@ -1,0 +1,10 @@
+<mat-sidenav-container>
+    <mat-sidenav #sidenav mode="over" position="end">
+        <nui-data-form [meta]="metaForm$ | async" [data]="dataForm$ | async"></nui-data-form>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <nui-data-table [meta]="(metaTable$ | async)?.controls" [data]="(dataTable$ | async)?.value" (add)="onAdd($event)" (delete)="onDelete($event)"
+            (refresh)="onRefresh($event)" (select)="onSelect($event); sidenav.toggle()" (selectAll)="onSelectAll($event)" (deselectAll)="onDeselectAll($event)">
+        </nui-data-table>
+    </mat-sidenav-content>
+</mat-sidenav-container>

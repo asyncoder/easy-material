@@ -17,8 +17,8 @@ export class ExampleDataTableComponent implements OnInit {
   }
 
   private _refresh() {
-    this.meta$ = this.exService.getMeta();
-    this.data$ = this.exService.getData();
+    this.meta$ = this.exService.getData("Sections(1)?$expand=controls");
+    this.data$ = this.exService.getData("Customers");
   }
 
   onAdd(event) {
