@@ -22,7 +22,7 @@ import { Observable } from "rxjs/Observable";
 import { fromEvent } from "rxjs/observable/fromEvent";
 import { map } from "rxjs/operator/map";
 
-import { Meta, Field, LOV, LogicalOperator, Option } from "../../core/models";
+import { Field, LOV, LogicalOperator, Option } from "../../core/models";
 import { ActionService, CommonService } from "../../core/services";
 import { LogicalOperatorEnum as loEnum } from "../../core/enums";
 
@@ -49,13 +49,13 @@ export class DataTableComponent implements OnChanges {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild("searchInput") searchInput: ElementRef;
 
-  @Input() meta: Meta[] = [];
+  @Input() meta: any = [];
   @Input() data: any[] = [];
 
   @Output() add: EventEmitter<any> = new EventEmitter<any>();
   @Output() delete: EventEmitter<any[]> = new EventEmitter<any[]>();
   @Output() refresh: EventEmitter<any> = new EventEmitter<any>();
-  @Output() select: EventEmitter<any[]> = new EventEmitter<any[]>();
+  @Output() select: EventEmitter<any> = new EventEmitter<any>();
   @Output() selectAll: EventEmitter<any[]> = new EventEmitter<any[]>();
   @Output() deselectAll: EventEmitter<any[]> = new EventEmitter<any[]>();
 
@@ -90,7 +90,7 @@ export class DataTableComponent implements OnChanges {
   }
 
   getLabel(fieldId: string, value: string): string {
-    const meta: Meta = this.meta.find(
+    const meta = this.meta.find(
       m => m.field.type === "select" && m.field.id === fieldId
     );
     if (!meta) return value;
@@ -127,7 +127,7 @@ export class DataTableComponent implements OnChanges {
     } else {
       this.selectedRows = this.selectedRows.filter(dr => dr !== dataRow);
     }
-    this.select.emit(this.selectedRows);
+    this.select.emit({ isOnce: isOnce, selectedRows: this.selectedRows });
   }
 
   onSelectAllRows(isChecked: boolean): void {
