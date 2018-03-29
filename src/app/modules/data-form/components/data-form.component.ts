@@ -57,7 +57,6 @@ export class DataFormComponent implements OnChanges {
   }
 
   onSubmit() {
-    console.log(this.formGroup.value);
     this.submit.emit(this.formGroup.value);
   }
 
