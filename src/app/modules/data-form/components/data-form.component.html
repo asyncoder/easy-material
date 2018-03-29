@@ -1,34 +1,38 @@
 <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" *ngIf="meta && data">
     <mat-tab-group>
         <mat-tab *ngFor="let section of meta.sections" [label]="section.label">
-            <div *ngFor="let field of displayedFields(section)">
-                <div>
-                    <!-- text -->
-                    <mat-form-field *ngIf="field.type === 'text'">
-                        <input matInput [type]="field.type" [formControlName]="field.id" [placeholder]="field.label">
-                    </mat-form-field>
+            <div class="data-form--body">
+                <div *ngFor="let field of displayedFields(section)">
+                    <div>
+                        <!-- text -->
+                        <mat-form-field *ngIf="field.type === 'text'">
+                            <input matInput [type]="field.type" [formControlName]="field.id" [placeholder]="field.label">
+                        </mat-form-field>
 
-                    <!-- number -->
-                    <mat-form-field *ngIf="field.type === 'number'">
-                        <input matInput [type]="field.type" [formControlName]="field.id" [placeholder]="field.label">
-                    </mat-form-field>
+                        <!-- number -->
+                        <mat-form-field *ngIf="field.type === 'number'">
+                            <input matInput [type]="field.type" [formControlName]="field.id" [placeholder]="field.label">
+                        </mat-form-field>
 
-                    <!-- date -->
-                    <mat-form-field *ngIf="field.type === 'date'">
-                        <input matInput [matDatepicker]="picker" [formControlName]="field.id" [placeholder]="field.label">
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
-                    </mat-form-field>
+                        <!-- date -->
+                        <mat-form-field *ngIf="field.type === 'date'">
+                            <input matInput [matDatepicker]="picker" [formControlName]="field.id" [placeholder]="field.label">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
 
-                    <!-- select -->
-                    <mat-select *ngIf="field.type === 'select'" [formControlName]="field.id" [placeholder]="field.label">
-                        <mat-option *ngFor="let option of field.options" [value]="option.value">{{ option.label }}</mat-option>
-                    </mat-select>
+                        <!-- select -->
+                        <mat-form-field *ngIf="field.type === 'select'">
+                            <mat-select [formControlName]="field.id" [placeholder]="field.label">
+                                <mat-option *ngFor="let option of field.options" [value]="option.value">{{ option.label }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
                 </div>
             </div>
         </mat-tab>
     </mat-tab-group>
-    <div>
+    <div class="data-form--footer">
         <button mat-raised-button type="submit" color="primary">Save</button>
         <button mat-raised-button type="reset">Cancel</button>
     </div>
