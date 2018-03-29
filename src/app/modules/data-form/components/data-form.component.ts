@@ -61,6 +61,6 @@ export class DataFormComponent implements OnChanges {
   }
 
   onCancel() {
-    this.cancel.emit();
+    this.cancel.emit(this.formGroup.value);
   }
 }
