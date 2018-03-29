@@ -16,17 +16,24 @@ export class Example01Component {
   constructor(private exService: ExampleService) {}
 
   ngOnInit() {
-    this._refresh();
+    this._loadMeta();
+    this._refreshTable();
   }
 
-  private _refresh() {
-    this.metaTable$ = this.exService.getData("Sections(1)?$expand=controls");
+  private _refreshTable() {
     this.dataTable$ = this.exService.getData("Customers");
+  }
 
+  private _refreshForm(key: number) {
+    this.dataForm$ = this.exService.getData(`Customers(${key})`);
+    console.log(this.dataForm$);
+  }
+
+  private _loadMeta() {
+    this.metaTable$ = this.exService.getData("Sections(1)?$expand=controls");
     this.metaForm$ = this.exService.getData(
       "Panels(2)?$expand=sections($expand=controls)"
     );
-    this.dataForm$ = this.exService.getData("Customers(6)");
   }
 
   onAdd(event) {
@@ -38,10 +45,17 @@ export class Example01Component {
   }
 
   onRefresh(event) {
-    this._refresh();
+    this._refreshTable();
   }
 
   onSelect(event) {
+    if (event.length > 0) {
+      let key = event[0].key;
+      this._refreshForm(key);
+    }
+  }
+
+  onSelectMulti(event) {
     console.log(event);
   }
 
@@ -51,5 +65,13 @@ export class Example01Component {
 
   onDeselectAll(event) {
     console.log(event);
+  }
+
+  onSubmit(event) {
+    console.log(event);
+  }
+
+  onCancel(event) {
+    //console.log(event);
   }
 }
