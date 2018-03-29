@@ -148,20 +148,3 @@ export class DataTableComponent implements OnChanges {
     return this.selectedRows.find(dr => dr === dataRow);
   }
 }
-
-/*
-
-data = this.actionService.search(
-        this._data,
-        this.searchBy,
-        this.searchInput,
-        this.searchOperator
-      );
-
-      data = this.actionService.sort(
-        data,
-        this._sort.active,
-        this._sort.direction == "asc"
-      );
-
-*/
