@@ -56,6 +56,7 @@ export class DataTableComponent implements OnChanges {
   @Output() delete: EventEmitter<any[]> = new EventEmitter<any[]>();
   @Output() refresh: EventEmitter<any> = new EventEmitter<any>();
   @Output() select: EventEmitter<any> = new EventEmitter<any>();
+  @Output() selectMulti: EventEmitter<any> = new EventEmitter<any>();
   @Output() selectAll: EventEmitter<any[]> = new EventEmitter<any[]>();
   @Output() deselectAll: EventEmitter<any[]> = new EventEmitter<any[]>();
 
@@ -120,14 +121,19 @@ export class DataTableComponent implements OnChanges {
     });
   }
 
-  onSelectRow(dataRow: any, isChecked: boolean, isOnce: boolean = false) {
-    if (isOnce) this.selectedRows = [];
+  onSelectRow(dataRow: any, isChecked: boolean) {
+    this.selectedRows = [];
+    this.selectedRows = [...this.selectedRows, dataRow];
+    this.select.emit(this.selectedRows);
+  }
+
+  onSelectMultiRows(dataRow: any, isChecked: boolean) {
     if (isChecked) {
       this.selectedRows = [...this.selectedRows, dataRow];
     } else {
       this.selectedRows = this.selectedRows.filter(dr => dr !== dataRow);
     }
-    this.select.emit({ isOnce: isOnce, selectedRows: this.selectedRows });
+    this.selectMulti.emit(this.selectedRows);
   }
 
   onSelectAllRows(isChecked: boolean): void {
