@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 import { Observable } from "rxjs/Observable";
+import { of } from "rxjs/observable/of";
 import { ExampleService } from "../example.service";
 
 @Component({
@@ -25,8 +26,8 @@ export class Example01Component {
   }
 
   private _refreshForm(key: number) {
-    this.dataForm$ = this.exService.getData(`Customers(${key})`);
-    console.log(this.dataForm$);
+    if (key === 0) this.dataForm$ = of(null);
+    else this.dataForm$ = this.exService.getData(`Customers(${key})`);
   }
 
   private _loadMeta() {
@@ -36,8 +37,24 @@ export class Example01Component {
     );
   }
 
+  private _add(payload: any) {
+    this.exService.addItem("Customers", payload).subscribe(
+      res => {
+        this._refreshTable();
+        this._refreshForm(0);
+      },
+      err => console.log(err)
+    );
+  }
+
+  private _update(key: number, payload: any) {
+    this.exService
+      .updateItem(`Customers(${key})`, payload)
+      .subscribe(res => this._refreshTable(), err => console.log(err));
+  }
+
   onAdd(event) {
-    console.log(event);
+    this._refreshForm(0);
   }
 
   onDelete(event) {
@@ -45,6 +62,11 @@ export class Example01Component {
   }
 
   onRefresh(event) {
+    this._refreshTable();
+  }
+
+  onReload(event) {
+    this._loadMeta();
     this._refreshTable();
   }
 
@@ -67,11 +89,12 @@ export class Example01Component {
     console.log(event);
   }
 
-  onSubmit(event) {
-    console.log(event);
+  onSave(event) {
+    if (event.key === 0) this._add(event);
+    else this._update(event.key, event);
   }
 
   onCancel(event) {
-    //console.log(event);
+    // console.log(event);
   }
 }
