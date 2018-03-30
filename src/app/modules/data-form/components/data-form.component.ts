@@ -33,7 +33,7 @@ export class DataFormComponent implements OnChanges {
   sections: Section[] = [];
 
   @Input() meta: any = [];
-  @Input() data: any[] = [];
+  @Input() data: any = [];
 
   @Output() submit: EventEmitter<any> = new EventEmitter();
   @Output() cancel: EventEmitter<any> = new EventEmitter();
@@ -43,9 +43,15 @@ export class DataFormComponent implements OnChanges {
   constructor(public fb: FormBuilder, public actionService: ActionService) {}
 
   ngOnChanges() {
-    if (this.meta && this.data) {
-      console.log("META", this.meta.sections);
-      console.log(this.data);
+    if (this.meta) {
+      if (!this.data) {
+        let data: any = {};
+        let fields = this.meta.sections.map(s =>
+          s.controls.map(c => c.field.id)
+        );
+        fields = [].concat(...fields).forEach(el => (data[el] = ""));
+        this.data = data;
+      }
       this.formGroup = this.fb.group(this.data);
     }
   }
