@@ -103,7 +103,7 @@ export class DataTableComponent implements OnChanges {
   }
 
   onAdd() {
-    this.add.emit({});
+    this.add.emit();
   }
 
   onDelete() {
