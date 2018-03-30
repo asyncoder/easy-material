@@ -1,4 +1,4 @@
-<form [formGroup]="formGroup" (ngSubmit)="onSubmit()" *ngIf="meta && data">
+<form [formGroup]="formGroup" (ngSubmit)="onSave()" *ngIf="meta && data">
     <mat-tab-group>
         <mat-tab *ngFor="let section of meta.sections" [label]="section.label">
             <div class="data-form--body">
@@ -33,7 +33,7 @@
         </mat-tab>
     </mat-tab-group>
     <div class="data-form--footer">
-        <button mat-raised-button type="submit" color="primary">Save</button>
-        <button mat-raised-button (click)="onCancel();">Cancel</button>
+        <button mat-raised-button color="primary">Save</button>
+        <button mat-raised-button type="reset" (click)="onCancel()">Cancel</button>
     </div>
 </form>

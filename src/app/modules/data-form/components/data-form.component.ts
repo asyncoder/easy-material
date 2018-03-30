@@ -35,7 +35,7 @@ export class DataFormComponent implements OnChanges {
   @Input() meta: any = [];
   @Input() data: any = [];
 
-  @Output() submit: EventEmitter<any> = new EventEmitter();
+  @Output() save: EventEmitter<any> = new EventEmitter();
   @Output() cancel: EventEmitter<any> = new EventEmitter();
 
   private readonly ORDER_NO: string = "OrderNo";
@@ -49,7 +49,9 @@ export class DataFormComponent implements OnChanges {
         let fields = this.meta.sections.map(s =>
           s.controls.map(c => c.field.id)
         );
-        fields = [].concat(...fields).forEach(el => (data[el] = ""));
+        fields = []
+          .concat(...fields)
+          .forEach(el => (data[el] = el === "key" ? 0 : ""));
         this.data = data;
       }
       this.formGroup = this.fb.group(this.data);
@@ -62,11 +64,11 @@ export class DataFormComponent implements OnChanges {
       .map(m => m.field);
   }
 
-  onSubmit() {
-    this.submit.emit(this.formGroup.value);
+  onSave() {
+    this.save.emit(this.formGroup.value);
   }
 
   onCancel() {
-    this.cancel.emit(this.formGroup.value);
+    this.cancel.emit();
   }
 }
