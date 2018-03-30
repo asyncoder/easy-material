@@ -60,7 +60,7 @@
       <mat-menu x-position="before" #menuAction="matMenu">
         <button mat-menu-item (click)="onSelectAllRows(true)">Select All</button>
         <button mat-menu-item (click)="onDeselectAllRows()">Deselect All</button>
-        <button mat-menu-item>Reload</button>
+        <button mat-menu-item (click)="onReload()">Reload</button>
       </mat-menu>
     </div>
   </div>

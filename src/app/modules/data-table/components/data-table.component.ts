@@ -55,6 +55,7 @@ export class DataTableComponent implements OnChanges {
   @Output() add: EventEmitter<any> = new EventEmitter<any>();
   @Output() delete: EventEmitter<any[]> = new EventEmitter<any[]>();
   @Output() refresh: EventEmitter<any> = new EventEmitter<any>();
+  @Output() reload: EventEmitter<any> = new EventEmitter<any>();
   @Output() select: EventEmitter<any> = new EventEmitter<any>();
   @Output() selectMulti: EventEmitter<any> = new EventEmitter<any>();
   @Output() selectAll: EventEmitter<any[]> = new EventEmitter<any[]>();
@@ -111,7 +112,11 @@ export class DataTableComponent implements OnChanges {
   }
 
   onRefresh() {
-    this.refresh.emit({});
+    this.refresh.emit();
+  }
+
+  onReload() {
+    this.reload.emit();
   }
 
   onSearch() {
