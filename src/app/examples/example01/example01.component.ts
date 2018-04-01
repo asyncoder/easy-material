@@ -1,60 +1,67 @@
-import { Component } from "@angular/core";
+import { Component, ViewChild, OnInit, AfterViewInit } from "@angular/core";
 import { Observable } from "rxjs/Observable";
 import { of } from "rxjs/observable/of";
 import { ExampleService } from "../example.service";
+import { MatSidenav } from "@angular/material";
+import { FormGroup } from "@angular/forms";
+import { DataFormComponent } from "../../modules/data-form/components/data-form.component";
 
 @Component({
   selector: "example01",
   templateUrl: "example01.component.html",
   styleUrls: ["example01.component.scss"]
 })
-export class Example01Component {
+export class Example01Component implements OnInit {
   metaTable$: Observable<any>;
   dataTable$: Observable<any>;
   metaForm$: Observable<any>;
   dataForm$: Observable<any>;
 
+  @ViewChild("sidenav") sidenav: MatSidenav;
+  @ViewChild("dataForm") dataForm: DataFormComponent;
+
   constructor(private exService: ExampleService) {}
 
   ngOnInit() {
-    this._loadMeta();
-    this._refreshTable();
+    this.loadMeta();
+    this.refreshTable();
   }
 
-  private _refreshTable() {
+  private refreshTable() {
     this.dataTable$ = this.exService.getData("Customers");
   }
 
-  private _refreshForm(key: number) {
-    if (key === 0) this.dataForm$ = of(null);
-    else this.dataForm$ = this.exService.getData(`Customers(${key})`);
-  }
-
-  private _loadMeta() {
+  private loadMeta() {
     this.metaTable$ = this.exService.getData("Sections(1)?$expand=controls");
     this.metaForm$ = this.exService.getData(
       "Panels(2)?$expand=sections($expand=controls)"
     );
   }
 
-  private _add(payload: any) {
-    this.exService.addItem("Customers", payload).subscribe(
-      res => {
-        this._refreshTable();
-        this._refreshForm(0);
-      },
-      err => console.log(err)
-    );
+  private onSuccess(res) {
+    this.onCancel(this.dataForm.formGroup);
+    this.refreshTable();
   }
 
-  private _update(key: number, payload: any) {
+  private onError(err) {
+    console.log("ERR", err.statusText);
+  }
+
+  private add(payload: any) {
+    this.exService
+      .addItem("Customers", payload)
+      .subscribe(res => this.onSuccess(res), err => this.onError(err));
+  }
+
+  private update(key: number, payload: any) {
     this.exService
       .updateItem(`Customers(${key})`, payload)
-      .subscribe(res => this._refreshTable(), err => console.log(err));
+      .subscribe(res => this.onSuccess(res), err => this.onError(err));
   }
 
   onAdd(event) {
-    this._refreshForm(0);
+    this.dataForm$ = of(null);
+    this.sidenav.open();
   }
 
   onDelete(event) {
@@ -62,18 +69,18 @@ export class Example01Component {
   }
 
   onRefresh(event) {
-    this._refreshTable();
+    this.refreshTable();
   }
 
   onReload(event) {
-    this._loadMeta();
-    this._refreshTable();
+    this.loadMeta();
+    this.refreshTable();
   }
 
-  onSelect(event) {
-    if (event.length > 0) {
-      let key = event[0].key;
-      this._refreshForm(key);
+  onSelect(rows: any) {
+    if (rows.length > 0) {
+      this.dataForm$ = of(rows[0]);
+      this.sidenav.open();
     }
   }
 
@@ -89,12 +96,15 @@ export class Example01Component {
     console.log(event);
   }
 
-  onSave(event) {
-    if (event.key === 0) this._add(event);
-    else this._update(event.key, event);
+  onSave(data: any) {
+    console.log(this.dataForm.formGroup);
+
+    if (data.key == 0) this.add(data);
+    if (data.key != 0) this.update(data.key, data);
   }
 
-  onCancel(event) {
-    // console.log(event);
+  onCancel(form: FormGroup) {
+    form.reset();
+    this.sidenav.close();
   }
 }

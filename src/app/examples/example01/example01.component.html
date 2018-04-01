@@ -1,11 +1,11 @@
 <mat-sidenav-container>
     <mat-sidenav #sidenav mode="over" position="end">
-        <nui-data-form [meta]="metaForm$ | async" [data]="dataForm$ | async" (save)="onSave($event); sidenav.close();" (cancel)="onCancel($event); sidenav.close();"></nui-data-form>
+        <nui-data-form #dataForm [meta]="metaForm$ | async" [data]="dataForm$ | async" (save)="onSave($event)" (cancel)="onCancel($event)"></nui-data-form>
     </mat-sidenav>
     <mat-sidenav-content>
-        <nui-data-table [meta]="(metaTable$ | async)?.controls" [data]="(dataTable$ | async)?.value" (add)="onAdd($event); sidenav.open();"
-            (delete)="onDelete($event)" (refresh)="onRefresh($event)" (reload)="onReload($event)" (select)="onSelect($event); sidenav.open();"
-            (selectMulti)="onSelectMulti($event)" (selectAll)="onSelectAll($event)" (deselectAll)="onDeselectAll($event)">
+        <nui-data-table [meta]="(metaTable$ | async)?.controls" [data]="(dataTable$ | async)?.value" (add)="onAdd($event)" (delete)="onDelete($event)"
+            (refresh)="onRefresh($event)" (reload)="onReload($event)" (select)="onSelect($event)" (selectMulti)="onSelectMulti($event)"
+            (selectAll)="onSelectAll($event)" (deselectAll)="onDeselectAll($event)">
         </nui-data-table>
     </mat-sidenav-content>
 </mat-sidenav-container>
