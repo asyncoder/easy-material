@@ -95,6 +95,7 @@ export class DataTableComponent implements OnChanges {
     const meta = this.meta.find(
       m => m.field.type === "select" && m.field.id === fieldId
     );
+
     if (!meta) return value;
 
     const option: Option = meta.field.options.find(o => o.value === value);

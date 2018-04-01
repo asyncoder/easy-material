@@ -65,7 +65,7 @@
     </div>
   </div>
 
-  <mat-table #table [dataSource]="dataSource" matSort>
+  <mat-table #table [dataSource]="dataSource" matSort *ngIf="meta">
     <ng-container matColumnDef="-select-">
       <mat-header-cell *matHeaderCellDef>
         <mat-checkbox color="primary" (change)="onSelectAllRows($event.checked)">
