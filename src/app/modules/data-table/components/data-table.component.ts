@@ -112,7 +112,6 @@ export class DataTableComponent implements OnChanges {
   }
 
   onRefresh() {
-    console.log(this.selectedRows);
     this.refresh.emit();
   }
 
