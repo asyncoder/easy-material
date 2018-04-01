@@ -112,6 +112,7 @@ export class DataTableComponent implements OnChanges {
   }
 
   onRefresh() {
+    console.log(this.selectedRows);
     this.refresh.emit();
   }
 
@@ -156,6 +157,6 @@ export class DataTableComponent implements OnChanges {
   }
 
   isRowSelected(dataRow: any): boolean {
-    return this.selectedRows.find(dr => dr === dataRow);
+    return this.selectedRows.find(dr => dr.key === dataRow.key);
   }
 }
