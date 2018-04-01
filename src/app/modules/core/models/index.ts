@@ -8,3 +8,4 @@ export * from "./lov.model";
 export * from "./filter.model";
 export * from "./filter-condition.model";
 export * from "./logical-operator.model";
+export * from "./result.model";
