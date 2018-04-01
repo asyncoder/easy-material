@@ -3,29 +3,29 @@
     <mat-tab-group>
         <mat-tab *ngFor="let section of meta.sections" [label]="section.label">
             <div class="data-form--body">
-                <div *ngFor="let field of displayedFields(section)">
+                <div *ngFor="let control of displayedControls(section)">
                     <div>
                         <!-- text -->
-                        <mat-form-field *ngIf="field.type === 'text'">
-                            <input matInput [type]="field.type" [formControlName]="field.id" [placeholder]="field.label">
+                        <mat-form-field *ngIf="control.field.type === 'text'">
+                            <input matInput [type]="control.field.type" [formControlName]="control.field.id" [placeholder]="control.field.label" [required]="control.isRequired">
                         </mat-form-field>
 
                         <!-- number -->
-                        <mat-form-field *ngIf="field.type === 'number'">
-                            <input matInput [type]="field.type" [formControlName]="field.id" [placeholder]="field.label">
+                        <mat-form-field *ngIf="control.field.type === 'number'">
+                            <input matInput [type]="control.field.type" [formControlName]="control.field.id" [placeholder]="control.field.label" [required]="control.isRequired">
                         </mat-form-field>
 
                         <!-- date -->
-                        <mat-form-field *ngIf="field.type === 'date'">
-                            <input matInput [matDatepicker]="picker" [formControlName]="field.id" [placeholder]="field.label">
+                        <mat-form-field *ngIf="control.field.type === 'date'">
+                            <input matInput [matDatepicker]="picker" [formControlName]="control.field.id" [placeholder]="control.field.label" [required]="control.isRequired">
                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                             <mat-datepicker #picker></mat-datepicker>
                         </mat-form-field>
 
                         <!-- select -->
-                        <mat-form-field *ngIf="field.type === 'select'">
-                            <mat-select [formControlName]="field.id" [placeholder]="field.label">
-                                <mat-option *ngFor="let option of field.options" [value]="option.value">{{ option.label }}</mat-option>
+                        <mat-form-field *ngIf="control.field.type === 'select'">
+                            <mat-select [formControlName]="control.field.id" [placeholder]="control.field.label" [required]="control.isRequired">
+                                <mat-option *ngFor="let option of control.field.options" [value]="option.value">{{ option.label }}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>

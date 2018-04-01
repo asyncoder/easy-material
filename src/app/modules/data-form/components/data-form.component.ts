@@ -14,7 +14,7 @@ import {
 } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 
-import { Field, Section } from "../../core/models";
+import { Field, Section, Control } from "../../core/models";
 import { ActionService } from "../../core/services";
 
 /**
@@ -60,10 +60,13 @@ export class DataFormComponent implements OnChanges {
     }
   }
 
-  displayedFields(section: Section): Field[] {
-    return this.actionService
-      .sort(section.controls.filter(m => m.isVisible), this.ORDER_NO, true)
-      .map(m => m.field);
+  displayedControls(section: Section): Control[] {
+    return this.actionService.sort(
+      section.controls.filter(c => c.isVisible),
+      this.ORDER_NO,
+      true
+    );
+    //.map(m => m.field);
   }
 
   onSave() {
