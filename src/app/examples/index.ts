@@ -10,6 +10,8 @@ import { ExampleDataFormComponent } from "./example01/example-data-form.componen
 import { ExampleService } from "./example.service";
 import { Example01Component } from "./example01/example01.component";
 import { MatSidenavModule } from "@angular/material";
+import { DialogService } from "../modules/core/services";
+import { DialogBoxModule } from "../modules/dialog-box";
 
 @NgModule({
   imports: [
@@ -17,7 +19,8 @@ import { MatSidenavModule } from "@angular/material";
     HttpClientModule,
     DataTableModule,
     DataFormModule,
-    MatSidenavModule
+    MatSidenavModule,
+    DialogBoxModule
   ],
   exports: [
     ExampleDataTableComponent,
@@ -29,6 +32,7 @@ import { MatSidenavModule } from "@angular/material";
     ExampleDataFormComponent,
     Example01Component
   ],
-  providers: [ExampleService]
+  entryComponents: [],
+  providers: [ExampleService, DialogService]
 })
 export class ExampleModule {}
