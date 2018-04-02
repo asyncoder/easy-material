@@ -23,7 +23,11 @@ import { fromEvent } from "rxjs/observable/fromEvent";
 import { map } from "rxjs/operator/map";
 
 import { Field, LOV, LogicalOperator, Option } from "../../core/models";
-import { ActionService, CommonService } from "../../core/services";
+import {
+  ActionService,
+  CommonService,
+  DialogService
+} from "../../core/services";
 import { LogicalOperatorEnum as loEnum } from "../../core/enums";
 
 /**
@@ -66,7 +70,8 @@ export class DataTableComponent implements OnChanges {
 
   constructor(
     private actionService: ActionService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private dialogService: DialogService
   ) {}
 
   ngOnChanges() {
@@ -109,7 +114,19 @@ export class DataTableComponent implements OnChanges {
   }
 
   onDelete() {
-    this.add.emit(this.selectedRows);
+    this.dialogService
+      .openDialog({
+        data: {
+          title: "Delete",
+          content: "Confirm?",
+          dialogButton: "YES_CANCEL",
+          color: "warn"
+        }
+      })
+      .subscribe(res => {
+        this.delete.emit(res === "YES" ? this.selectedRows : null);
+        this.selectedRows = [];
+      });
   }
 
   onRefresh() {

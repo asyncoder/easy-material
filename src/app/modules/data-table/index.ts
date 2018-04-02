@@ -19,6 +19,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { DataTableComponent } from "./components";
 import { ActionService, CommonService } from "../core/services";
 import { FilterPipe } from "../core/pipes";
+import { DialogBoxModule } from "../dialog-box";
 
 @NgModule({
   imports: [
@@ -35,7 +36,8 @@ import { FilterPipe } from "../core/pipes";
     MatIconModule,
     MatMenuModule,
     MatTooltipModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    DialogBoxModule
   ],
   entryComponents: [],
   declarations: [DataTableComponent, FilterPipe],
