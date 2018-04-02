@@ -1,38 +1,30 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { HttpClientModule } from "@angular/common/http";
+import { MatSidenavModule } from "@angular/material";
 
 import { DataTableModule } from "../modules/data-table";
 import { DataFormModule } from "../modules/data-form";
 
-import { ExampleDataTableComponent } from "./example01/example-data-table.component";
-import { ExampleDataFormComponent } from "./example01/example-data-form.component";
-import { ExampleService } from "./example.service";
-import { Example01Component } from "./example01/example01.component";
-import { MatSidenavModule } from "@angular/material";
+import { CustomerComponent } from "./customer/customer.component";
+
 import { DialogService } from "../modules/core/services";
 import { DialogBoxModule } from "../modules/dialog-box";
+import { DataEntityModule } from "../modules/data-entity";
 
 @NgModule({
   imports: [
     CommonModule,
     HttpClientModule,
+    MatSidenavModule,
+    DataEntityModule,
     DataTableModule,
     DataFormModule,
-    MatSidenavModule,
     DialogBoxModule
   ],
-  exports: [
-    ExampleDataTableComponent,
-    ExampleDataFormComponent,
-    Example01Component
-  ],
-  declarations: [
-    ExampleDataTableComponent,
-    ExampleDataFormComponent,
-    Example01Component
-  ],
+  exports: [CustomerComponent],
+  declarations: [CustomerComponent],
   entryComponents: [],
-  providers: [ExampleService, DialogService]
+  providers: [DialogService]
 })
 export class ExampleModule {}
