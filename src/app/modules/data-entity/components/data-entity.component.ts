@@ -1,18 +1,24 @@
-import { Component, ViewChild, OnInit, AfterViewInit } from "@angular/core";
+import {
+  Component,
+  ViewChild,
+  OnInit,
+  AfterViewInit,
+  Input
+} from "@angular/core";
 import { Observable } from "rxjs/Observable";
 import { of } from "rxjs/observable/of";
-import { ExampleService } from "../example.service";
 import { MatSidenav } from "@angular/material";
 import { FormGroup } from "@angular/forms";
-import { DataFormComponent } from "../../modules/data-form/components/data-form.component";
-import { DialogService } from "../../modules/core/services";
+
+import { DataFormComponent } from "../../data-form/components/data-form.component";
+import { DialogService, DataService } from "../../core/services";
 
 @Component({
-  selector: "example01",
-  templateUrl: "example01.component.html",
-  styleUrls: ["example01.component.scss"]
+  selector: "nui-data-entity",
+  templateUrl: "data-entity.component.html",
+  styleUrls: ["data-entity.component.scss"]
 })
-export class Example01Component implements OnInit {
+export class DataEntityComponent implements OnInit {
   metaTable$: Observable<any>;
   dataTable$: Observable<any>;
   metaForm$: Observable<any>;
@@ -21,8 +27,16 @@ export class Example01Component implements OnInit {
   @ViewChild("sidenav") sidenav: MatSidenav;
   @ViewChild("dataForm") dataForm: DataFormComponent;
 
+  @Input() api: string;
+
+  @Input() apiMetaTable: string;
+
+  @Input() apiMetaForm: string;
+
+  @Input() apiDataTable: string;
+
   constructor(
-    private exService: ExampleService,
+    private dataService: DataService,
     private dialogService: DialogService
   ) {}
 
@@ -31,15 +45,19 @@ export class Example01Component implements OnInit {
   }
 
   private loadMeta() {
-    this.metaTable$ = this.exService.getData("Sections(1)?$expand=controls");
+    this.metaTable$ = this.dataService.getData(
+      `${this.api}/${this.apiMetaTable}`
+    );
 
-    this.metaForm$ = this.exService.getData(
-      "Panels(2)?$expand=sections($expand=controls)"
+    this.metaForm$ = this.dataService.getData(
+      `${this.api}/${this.apiMetaForm}`
     );
   }
 
   private refreshTable() {
-    this.dataTable$ = this.exService.getData("Customers");
+    this.dataTable$ = this.dataService.getData(
+      `${this.api}/${this.apiDataTable}`
+    );
   }
 
   private onSuccess(res) {
@@ -51,7 +69,7 @@ export class Example01Component implements OnInit {
     this.dialogService.openDialog({
       data: {
         title: `Oops: ${err.statusText}`,
-        content: `An error has been occured, please contact your administrator and retry again.`,
+        content: `An error has been occured, please retry again.`,
         dialogButton: "OK",
         color: "warn"
       }
@@ -59,14 +77,14 @@ export class Example01Component implements OnInit {
   }
 
   private add(payload: any) {
-    this.exService
-      .addItem("Customers", payload)
+    this.dataService
+      .addItem(`${this.api}/${this.apiDataTable}`, payload)
       .subscribe(res => this.onSuccess(res), err => this.onError(err));
   }
 
   private update(key: number, payload: any) {
-    this.exService
-      .updateItem(`Customers(${key})`, payload)
+    this.dataService
+      .updateItem(`${this.api}/${this.apiDataTable}(${key})`, payload)
       .subscribe(res => this.onSuccess(res), err => this.onError(err));
   }
 
@@ -79,8 +97,8 @@ export class Example01Component implements OnInit {
   onDelete(rows: any) {
     if (rows && rows.length > 0) {
       rows.forEach(row => {
-        this.exService
-          .deleteItem(`Customers(${row.key})`)
+        this.dataService
+          .deleteItem(`${this.api}/${this.apiDataTable}(${row.key})`)
           .subscribe(res => this.onSuccess(res), err => this.onError(err));
       });
     }
