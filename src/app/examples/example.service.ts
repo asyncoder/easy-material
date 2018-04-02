@@ -6,7 +6,6 @@ import {
 } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
 import { of } from "rxjs/observable/of";
-import { catchError } from "rxjs/operators";
 
 const API: string = "http://localhost:51203/odata/";
 const OPTIONS = {
@@ -23,10 +22,13 @@ export class ExampleService {
 
   addItem(url: string, payload: any): Observable<any> {
     return this.httpClient.post(`${API}${url}`, payload, OPTIONS);
-    //.pipe(catchError(err => of(err)));
   }
 
   updateItem(url: string, payload: any): Observable<any> {
     return this.httpClient.put(`${API}${url}`, payload, OPTIONS);
+  }
+
+  deleteItem(url: string): Observable<any> {
+    return this.httpClient.delete(`${API}${url}`, OPTIONS);
   }
 }
