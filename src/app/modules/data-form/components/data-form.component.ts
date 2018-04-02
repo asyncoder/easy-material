@@ -12,7 +12,7 @@ import {
   EventEmitter,
   ChangeDetectionStrategy
 } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 import { Field, Section, Control } from "../../core/models";
 import { ActionService } from "../../core/services";
@@ -66,7 +66,6 @@ export class DataFormComponent implements OnChanges {
       this.ORDER_NO,
       true
     );
-    //.map(m => m.field);
   }
 
   onSave() {
