@@ -1,18 +1,18 @@
 <!-- OK -->
-<div *ngIf="data.dialogButton == 'OK'">
+<div *ngIf="data && data.dialogButton == 'OK'">
     <h1 mat-dialog-title class="mat-dialog-title {{ data.style }}">{{ data.title }}</h1>
     <div mat-dialog-content>{{ data.content }}</div>
     <div mat-dialog-actions>
-        <button mat-button color="primary" (click)="dialogRef.close('OK')">OK</button>
+        <button mat-button [color]="data.color" (click)="dialogRef.close('OK')">OK</button>
     </div>
 </div>
 
 <!-- Yes / Cancel -->
-<div *ngIf="data.dialogButton == 'YES_CANCEL'">
+<div *ngIf="data && data.dialogButton == 'YES_CANCEL'">
     <h1 mat-dialog-title class="mat-dialog-title {{ data.style }}">{{ data.title }}</h1>
     <div mat-dialog-content>{{ data.content }}</div>
     <div mat-dialog-actions>
-        <button mat-button (click)="dialogRef.close('YES')">YES</button>
+        <button mat-button [color]="data.color" (click)="dialogRef.close('YES')">YES</button>
         <button mat-button (click)="dialogRef.close('CANCEL')">CANCEL</button>
     </div>
 </div>
