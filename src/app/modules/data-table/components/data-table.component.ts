@@ -22,7 +22,13 @@ import { Observable } from "rxjs/Observable";
 import { fromEvent } from "rxjs/observable/fromEvent";
 import { map } from "rxjs/operator/map";
 
-import { Field, LOV, LogicalOperator, Option } from "../../core/models";
+import {
+  Control,
+  Field,
+  LOV,
+  LogicalOperator,
+  Option
+} from "../../core/models";
 import {
   ActionService,
   CommonService,
@@ -54,7 +60,8 @@ export class DataTableComponent implements OnChanges {
   @ViewChild("searchInput") searchInput: ElementRef;
 
   @Input() meta: any = [];
-  @Input() data: any[] = [];
+  @Input() data: any = [];
+  @Input() fieldKey: string;
 
   @Output() add: EventEmitter<any> = new EventEmitter<any>();
   @Output() delete: EventEmitter<any[]> = new EventEmitter<any[]>();
@@ -65,7 +72,7 @@ export class DataTableComponent implements OnChanges {
   @Output() selectAll: EventEmitter<any[]> = new EventEmitter<any[]>();
   @Output() deselectAll: EventEmitter<any[]> = new EventEmitter<any[]>();
 
-  private readonly ORDER_NO: string = "OrderNo";
+  private readonly ORDER_NO: string = "controlOrderNo";
   private readonly KEY_ACTION: string = "keyup";
 
   constructor(
@@ -78,17 +85,21 @@ export class DataTableComponent implements OnChanges {
     // Metafields
     if (this.meta) {
       this.displayedFields = this.actionService
-        .sort(this.meta.filter(m => m.isVisible), this.ORDER_NO, true)
-        .map(m => m.field);
+        .sort(
+          this.meta.filter((c: Control) => c.controlVisible),
+          this.ORDER_NO,
+          true
+        )
+        .map((c: Control) => c.field);
 
-      this.displayedColumns = this.displayedFields.map(f => f.id);
+      this.displayedColumns = this.displayedFields.map(f => f.fieldId);
       this.displayedColumns = ["-select-", ...this.displayedColumns];
     }
 
     // Data
     if (this.data) {
+      //this.data = this.transformData(this.data);
       this.dataSource = new MatTableDataSource(this.data);
-
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
 
@@ -96,17 +107,28 @@ export class DataTableComponent implements OnChanges {
     }
   }
 
+  getRow(fieldId: string, row: any) {
+    const arr = fieldId.split(".");
+    if (arr.length > 1) {
+      row = row[arr[0]];
+      this.getRow(arr[0], row);
+    }
+    return row[arr[arr.length - 1]];
+  }
+
   getLabel(fieldId: string, value: string): string {
     const meta = this.meta.find(
-      m => m.field.type === "select" && m.field.id === fieldId
+      m => m.field.fieldType === "select" && m.field.fieldId === fieldId
     );
 
     if (!meta) return value;
 
-    const option: Option = meta.field.options.find(o => o.value === value);
+    const option: Option = meta.field.options.find(
+      o => o.optionValue === value
+    );
     if (!option) return;
 
-    return option.label;
+    return option.optionLabel;
   }
 
   onAdd() {
@@ -135,6 +157,24 @@ export class DataTableComponent implements OnChanges {
 
   onReload() {
     this.reload.emit();
+  }
+
+  transformData(data: any): any {
+    let _data = [];
+    data.map(dr => {
+      //_data = [..._data, dr];
+      const keys = Object.keys(dr).map(pkey => {
+        if (typeof dr[pkey] === "object") {
+          const arr = Object.keys(dr[pkey]).map(ckey => {
+            return { [`${ckey}`]: dr[pkey][ckey] };
+          });
+          _data = [..._data, Object.assign({}, ...arr, dr)];
+        }
+      });
+    });
+    console.log(_data);
+
+    return _data;
   }
 
   onSearch() {
@@ -174,6 +214,8 @@ export class DataTableComponent implements OnChanges {
   }
 
   isRowSelected(dataRow: any): boolean {
-    return this.selectedRows.find(dr => dr.key === dataRow.key);
+    return this.selectedRows.find(
+      dr => dr[this.fieldKey] === dataRow[this.fieldKey]
+    );
   }
 }

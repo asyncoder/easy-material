@@ -34,12 +34,13 @@ export class DataFormComponent implements OnChanges {
 
   @Input() meta: any = [];
   @Input() data: any = [];
+  @Input() fieldKey: string;
 
   @Output() save: EventEmitter<any> = new EventEmitter();
   @Output() cancel: EventEmitter<any> = new EventEmitter();
 
-  private readonly ORDER_NO: string = "OrderNo";
-  private readonly KEY: string = "key";
+  private readonly ORDER_NO: string = "fieldOrderNo";
+  //private readonly KEY: string = "key";
 
   constructor(public fb: FormBuilder, public actionService: ActionService) {}
 
@@ -47,12 +48,14 @@ export class DataFormComponent implements OnChanges {
     if (this.meta) {
       if (!this.data) {
         let data: any = {};
-        let fields = this.meta.sections.map(s =>
-          s.controls.map(c => c.field.id)
+        let columns: any = [];
+        columns = this.meta.sections.map((s: Section) =>
+          s.controls.map(c => c.field.fieldId)
         );
-        fields = []
-          .concat(...fields)
-          .forEach(el => (data[el] = el === this.KEY ? 0 : ""));
+
+        columns = []
+          .concat(...columns)
+          .forEach((el: string) => (data[el] = el === this.fieldKey ? 0 : ""));
 
         this.data = data;
       }
@@ -62,7 +65,7 @@ export class DataFormComponent implements OnChanges {
 
   displayedControls(section: Section): Control[] {
     return this.actionService.sort(
-      section.controls.filter(c => c.isVisible),
+      section.controls.filter(c => c.controlVisible),
       this.ORDER_NO,
       true
     );
@@ -70,7 +73,7 @@ export class DataFormComponent implements OnChanges {
 
   onSave() {
     let data = this.formGroup.value;
-    if (!data.key) data.key = 0;
+    if (!data[this.fieldKey]) data[this.fieldKey] = 0;
     this.save.emit(data);
   }
 

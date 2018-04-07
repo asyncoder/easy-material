@@ -5,7 +5,8 @@ import {
   MatTabsModule,
   MatDatepickerModule,
   MatSelectModule,
-  MatButtonModule
+  MatButtonModule,
+  MatNativeDateModule
 } from "@angular/material";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ReactiveFormsModule } from "@angular/forms";
@@ -20,6 +21,7 @@ import { SortPipe } from "../core/pipes";
     MatInputModule,
     MatTabsModule,
     MatDatepickerModule,
+    MatNativeDateModule,
     MatSelectModule,
     MatButtonModule,
     BrowserAnimationsModule,

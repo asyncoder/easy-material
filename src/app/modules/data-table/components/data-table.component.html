@@ -73,15 +73,15 @@
       </mat-header-cell>
 
       <mat-cell *matCellDef="let row">
-        <mat-checkbox color="primary" [checked]="isRowSelected(row)" [value]="row.key" (change)="onSelectMultiRows(row, $event.checked)">
+        <mat-checkbox color="primary" [checked]="isRowSelected(row)" [value]="row[fieldKey]" (change)="onSelectMultiRows(row, $event.checked)">
         </mat-checkbox>
       </mat-cell>
     </ng-container>
 
-    <ng-container *ngFor="let dr of displayedFields" [matColumnDef]="dr.id">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ dr.label }}</mat-header-cell>
+    <ng-container *ngFor="let field of displayedFields" [matColumnDef]="field.fieldId">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ field.fieldLabel }}</mat-header-cell>
       <mat-cell *matCellDef="let row" (click)="onSelectRow(row)">
-        {{ getLabel(dr.id, row[dr.id]) }}
+        {{ getLabel(field.fieldId, row[field.fieldId]) }}
       </mat-cell>
     </ng-container>
 

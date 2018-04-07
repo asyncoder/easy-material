@@ -3,11 +3,11 @@ import { Option } from "./option.model";
 import { FieldTypeEnum } from "../enums";
 
 export interface Field {
-    key: number;
-    id: string;
-    label: string;
-    type: string;
-    options: Option[];
-    entity: Entity;
-    entityKey: number;    
+  fieldKey: number;
+  fieldId: string;
+  fieldLabel: string;
+  fieldType: string;
+  options: Option[];
+  entity: Entity;
+  entityKey: number;
 }

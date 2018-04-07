@@ -2,10 +2,10 @@ import { Panel } from "./panel.model";
 import { Control } from "./control.model";
 
 export interface Section {
-    key: number;
-    id: string;
-    label: string;
-    panel: Panel;
-    panelKey: number;
-    controls: Control[];
+  sectionKey: number;
+  sectionId: string;
+  sectionLabel: string;
+  panel: Panel;
+  panelKey: number;
+  controls: Control[];
 }

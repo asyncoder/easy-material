@@ -27,12 +27,10 @@ export class DataEntityComponent implements OnInit {
   @ViewChild("sidenav") sidenav: MatSidenav;
   @ViewChild("dataForm") dataForm: DataFormComponent;
 
+  @Input() fieldKey: string;
   @Input() api: string;
-
   @Input() apiMetaTable: string;
-
   @Input() apiMetaForm: string;
-
   @Input() apiDataTable: string;
 
   constructor(
