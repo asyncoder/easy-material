@@ -12,23 +12,16 @@ import {
   EventEmitter,
   Output,
   ChangeDetectionStrategy,
-  OnChanges
+  OnChanges,
+  OnInit
 } from "@angular/core";
 
 import { DataSource } from "@angular/cdk/collections";
 import { MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
 
-import { Observable } from "rxjs/Observable";
-import { fromEvent } from "rxjs/observable/fromEvent";
-import { map } from "rxjs/operator/map";
+import { Observable, fromEvent } from "rxjs";
 
-import {
-  Control,
-  Field,
-  LOV,
-  LogicalOperator,
-  Option
-} from "../../core/models";
+import { Control, Field, LogicalOperator, Option } from "../../core/models";
 import {
   ActionService,
   CommonService,
@@ -47,7 +40,7 @@ import { LogicalOperatorEnum as loEnum } from "../../core/enums";
   styleUrls: ["./data-table.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DataTableComponent implements OnChanges {
+export class DataTableComponent implements OnChanges, OnInit {
   searchableFields: Field[];
   displayedFields: Field[];
   displayedColumns: string[];
@@ -81,6 +74,10 @@ export class DataTableComponent implements OnChanges {
     private dialogService: DialogService
   ) {}
 
+  ngOnInit() {
+    console.log(this.sort);
+  }
+
   ngOnChanges() {
     // Metafields
     if (this.meta) {
@@ -98,10 +95,13 @@ export class DataTableComponent implements OnChanges {
 
     // Data
     if (this.data) {
-      //this.data = this.transformData(this.data);
+      this.data = this.transformData(this.data);
+      console.log(this.data);
+
       this.dataSource = new MatTableDataSource(this.data);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+      console.log(this.sort);
 
       this.onSearch();
     }
@@ -162,18 +162,20 @@ export class DataTableComponent implements OnChanges {
   transformData(data: any): any {
     let _data = [];
     data.map(dr => {
-      //_data = [..._data, dr];
-      const keys = Object.keys(dr).map(pkey => {
-        if (typeof dr[pkey] === "object") {
-          const arr = Object.keys(dr[pkey]).map(ckey => {
-            return { [`${ckey}`]: dr[pkey][ckey] };
+      let objParent = {};
+      let objChild = {};
+      Object.keys(dr).map(pkey => {
+        let arr = [];
+        if (dr[pkey] && typeof dr[pkey] === "object") {
+          arr = Object.keys(dr[pkey]).map(ckey => {
+            objChild = { ...objChild, [`${ckey}`]: dr[pkey][ckey] };
           });
-          _data = [..._data, Object.assign({}, ...arr, dr)];
+        } else {
+          objParent = { ...objParent, [`${pkey}`]: dr[pkey] };
         }
       });
+      _data = [..._data, Object.assign({}, objParent, objChild)];
     });
-    console.log(_data);
-
     return _data;
   }
 
@@ -217,5 +219,9 @@ export class DataTableComponent implements OnChanges {
     return this.selectedRows.find(
       dr => dr[this.fieldKey] === dataRow[this.fieldKey]
     );
+  }
+
+  isAllSelected(): boolean {
+    return this.selectedRows.length === this.data.length;
   }
 }
