@@ -12,8 +12,7 @@ import {
   EventEmitter,
   Output,
   ChangeDetectionStrategy,
-  OnChanges,
-  OnInit
+  OnChanges
 } from "@angular/core";
 
 import { DataSource } from "@angular/cdk/collections";
@@ -40,9 +39,9 @@ import { LogicalOperatorEnum as loEnum } from "../../core/enums";
   styleUrls: ["./data-table.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DataTableComponent implements OnChanges, OnInit {
+export class DataTableComponent implements OnChanges {
   searchableFields: Field[];
-  displayedFields: Field[];
+  displayedControls: Control[];
   displayedColumns: string[];
   dataSource: MatTableDataSource<any>;
   selectedRows: any[] = [];
@@ -74,34 +73,25 @@ export class DataTableComponent implements OnChanges, OnInit {
     private dialogService: DialogService
   ) {}
 
-  ngOnInit() {
-    console.log(this.sort);
-  }
-
   ngOnChanges() {
     // Metafields
     if (this.meta) {
-      this.displayedFields = this.actionService
-        .sort(
-          this.meta.filter((c: Control) => c.controlVisible),
-          this.ORDER_NO,
-          true
-        )
-        .map((c: Control) => c.field);
+      this.displayedControls = this.actionService.sort(
+        this.meta.filter((c: Control) => c.controlVisible),
+        this.ORDER_NO,
+        true
+      );
 
-      this.displayedColumns = this.displayedFields.map(f => f.fieldId);
+      this.displayedColumns = this.displayedControls.map(c => c.field.fieldId);
       this.displayedColumns = ["-select-", ...this.displayedColumns];
     }
 
     // Data
     if (this.data) {
       this.data = this.transformData(this.data);
-      console.log(this.data);
-
       this.dataSource = new MatTableDataSource(this.data);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-      console.log(this.sort);
 
       this.onSearch();
     }
@@ -116,7 +106,7 @@ export class DataTableComponent implements OnChanges, OnInit {
     return row[arr[arr.length - 1]];
   }
 
-  getLabel(fieldId: string, value: string): string {
+  getValueLabel(fieldId: string, value: string): string {
     const meta = this.meta.find(
       m => m.field.fieldType === "select" && m.field.fieldId === fieldId
     );
@@ -129,6 +119,42 @@ export class DataTableComponent implements OnChanges, OnInit {
     if (!option) return;
 
     return option.optionLabel;
+  }
+
+  getFieldLabel(fieldLabel: string, fieldLabelOverridden: string) {
+    return fieldLabelOverridden != null && fieldLabelOverridden.trim() !== ""
+      ? fieldLabelOverridden
+      : fieldLabel;
+  }
+
+  isRowSelected(dataRow: any): boolean {
+    return this.selectedRows.find(
+      dr => dr[this.fieldKey] === dataRow[this.fieldKey]
+    );
+  }
+
+  isAllSelected(): boolean {
+    return this.selectedRows.length === this.data.length;
+  }
+
+  transformData(data: any): any {
+    let _data = [];
+    data.map(dr => {
+      let objParent = {};
+      let objChild = {};
+      Object.keys(dr).map(pkey => {
+        let arr = [];
+        if (dr[pkey] && typeof dr[pkey] === "object") {
+          arr = Object.keys(dr[pkey]).map(ckey => {
+            objChild = { ...objChild, [`${ckey}`]: dr[pkey][ckey] };
+          });
+        } else {
+          objParent = { ...objParent, [`${pkey}`]: dr[pkey] };
+        }
+      });
+      _data = [..._data, Object.assign({}, objParent, objChild)];
+    });
+    return _data;
   }
 
   onAdd() {
@@ -157,26 +183,6 @@ export class DataTableComponent implements OnChanges, OnInit {
 
   onReload() {
     this.reload.emit();
-  }
-
-  transformData(data: any): any {
-    let _data = [];
-    data.map(dr => {
-      let objParent = {};
-      let objChild = {};
-      Object.keys(dr).map(pkey => {
-        let arr = [];
-        if (dr[pkey] && typeof dr[pkey] === "object") {
-          arr = Object.keys(dr[pkey]).map(ckey => {
-            objChild = { ...objChild, [`${ckey}`]: dr[pkey][ckey] };
-          });
-        } else {
-          objParent = { ...objParent, [`${pkey}`]: dr[pkey] };
-        }
-      });
-      _data = [..._data, Object.assign({}, objParent, objChild)];
-    });
-    return _data;
   }
 
   onSearch() {
@@ -213,15 +219,5 @@ export class DataTableComponent implements OnChanges, OnInit {
   onDeselectAllRows(): void {
     this.selectedRows = [];
     this.deselectAll.emit(this.selectedRows);
-  }
-
-  isRowSelected(dataRow: any): boolean {
-    return this.selectedRows.find(
-      dr => dr[this.fieldKey] === dataRow[this.fieldKey]
-    );
-  }
-
-  isAllSelected(): boolean {
-    return this.selectedRows.length === this.data.length;
   }
 }
